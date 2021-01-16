@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useForm from '../../hooks/form';
 import { useHistory } from 'react-router-dom';
-import {logIn} from '../../main';
+//import {logIn} from '../backend/public/main';
 
 const Login = () => {
   // hooks
@@ -16,7 +16,7 @@ const Login = () => {
   const roomId = Math.floor(Math.random() * 10000); 
 
   const client_id = '5bacc656ab69429a852568b4140da742';
-  const access_token ="access_token=BQD0qsPvWH7eXkTw-KViq5_jW4EkZ6w7XnH13EvfcB7vi9VbZGnAXfzCpaNBvlg507lgEsIEMSNs60i_zGC93tZzGdzb28AIzj0Yd00ar_3ETThJMMobArwrS5D2_5YAf-uUCXgN2cOLS6mvLIY91_nQkuuXvNKEBuCmZuOomtph3bmycKyVvV6im2yfH2iX2pzVCwjQuB93O9ob7XxmoH921v_HPfh2d49RPac3";
+  const access_token ="BQDbgT48axNY_01XKFIZDg1_inM59vzgUdwIEzNss-wil1NS33FA9Xe0R1SVhA3uKOXMI5ivEzmMULg_QAmj5ZRG2Ng7ImxZOop0ne1ZLJtHf03xGQFqPVhl9gzFE14iNUQDslllYZhZj1Qyb4DsixCrWf7AUkiYMjiMDB6b1G0p7Z-2OLBzdHPXHS-ixjoWUzyqd-38-4v7R-6nZOZfFw70SmJa25_JjjFQOQND";
   const redirect_uri = `http://localhost:3000/room`
   const scope = 'user-read-private user-top-read playlist-modify-public playlist-read-private playlist-read-collaborative app-remote-control user-modify-playback-state';
 
