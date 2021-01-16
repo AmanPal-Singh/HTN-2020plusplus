@@ -180,6 +180,18 @@ app.get("/", function (req, res) {
     res.sendFile(path.join(public, "index.html"));
 });
 
+
+// Get room's playlist returns data in form of:
+// [
+//     {
+//         id: "3ee8Jmje8o58CHK66QrVC2",
+//         votes: 3
+//     },
+//     {
+//         id: "46OFHBw45fNi7QNjSetITR",
+//         votes: 0
+//     },
+// ]
 app.get("/api/getPlaylist/:roomid", function (req, res) {
     const roomId = parseInt(req.params.roomid)
     const playlist = activeRooms.filter(function(item){
@@ -188,6 +200,8 @@ app.get("/api/getPlaylist/:roomid", function (req, res) {
     res.json(playlist)
 });
 
+// Add song to playlist, example POST request
+// http://localhost:3000/api/addToPlaylist/123?songId=46OFHBw45fNi7QNjSetITR
 app.post("/api/addToPlaylist/:roomid", function (req, res) {
     const roomId = parseInt(req.params.roomid)
     const songId = req.query.songId
