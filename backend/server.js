@@ -5,7 +5,7 @@ var path = require("path");
 var public = path.join(__dirname, "public");
 const axios = require('axios').default;
 
-var activeRooms = [
+let activeRooms = [
     {
         roomID: 123,
         userID: "borkboy420",
@@ -100,12 +100,36 @@ app.get("/", function (req, res) {
     res.sendFile(path.join(public, "index.html"));
 });
 
+
+// Get room's playlist returns data in form of:
+// [
+//     {
+//         id: "3ee8Jmje8o58CHK66QrVC2",
+//         votes: 3
+//     },
+//     {
+//         id: "46OFHBw45fNi7QNjSetITR",
+//         votes: 0
+//     },
+// ]
 app.get("/api/getPlaylist/:roomid", function (req, res) {
     const roomId = parseInt(req.params.roomid)
     const playlist = activeRooms.filter(function(item){
         return item.roomID == roomId;
     })[0]["queue"]
     res.json(playlist)
+});
+
+// Add song to playlist, example POST request
+// http://localhost:3000/api/addToPlaylist/123?songId=46OFHBw45fNi7QNjSetITR
+app.post("/api/addToPlaylist/:roomid", function (req, res) {
+    const roomId = parseInt(req.params.roomid)
+    const songId = req.query.songId
+    activeRooms.filter(function(item){
+        return item.roomID == roomId;
+    })[0]["queue"].push({id:songId, votes: 1})
+    console.log(roomId, "Added song", songId)
+    res.json({added_song: songId})
 });
 
 // Serve static files in the public directory
