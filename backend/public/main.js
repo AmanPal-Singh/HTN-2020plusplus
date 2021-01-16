@@ -9,7 +9,5 @@ function logIn() {
         + '&response_type=' + 'token'
         + '&redirect_uri=' + redirect_uri
         + '&scope=' + scope;
-
-    sessionStorage.setItem('time_rangeA', 'medium_term');
-    sessionStorage.setItem('time_rangeS', 'medium_term');
+        
 }

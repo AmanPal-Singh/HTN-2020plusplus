@@ -51,3 +51,10 @@ function getUserId(){
         });
     return false
 }
+
+function extendToken(){
+    /* Spotify API access tokens expire relatively early, so this function should be called
+    regularly to extend the access token using the refresh token given */
+    
+
+}
