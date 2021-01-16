@@ -5,7 +5,7 @@ var path = require("path");
 var public = path.join(__dirname, "public");
 const axios = require('axios').default;
 
-var activeRooms = [
+let activeRooms = [
     {
         roomID: 123,
         userID: "borkboy420",
@@ -106,6 +106,16 @@ app.get("/api/getPlaylist/:roomid", function (req, res) {
         return item.roomID == roomId;
     })[0]["queue"]
     res.json(playlist)
+});
+
+app.post("/api/addToPlaylist/:roomid", function (req, res) {
+    const roomId = parseInt(req.params.roomid)
+    const songId = req.query.songId
+    activeRooms.filter(function(item){
+        return item.roomID == roomId;
+    })[0]["queue"].push({id:songId, votes: 1})
+    console.log(roomId, "Added song", songId)
+    res.json({added_song: songId})
 });
 
 // Serve static files in the public directory
