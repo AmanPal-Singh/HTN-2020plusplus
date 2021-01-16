@@ -15,7 +15,21 @@ var activeRooms = [
         roomID: 123,
         userID: "borkboy420",
         authToken: "BQDjMlxYPCNmaC6z99NINqjgaOHFmywfTHP8buhg_rnWEQZOmSaZ0fh2WB6mG-YqTyH3SNjYBJZc1cPWFUv97P0GU8hbcpCkZTQNpeHlUSYp9hmi7OqZKBo6eouRwtaWzhVzhTHz7m5L2IH-TEg20PHU-pny4L2mLWyalH4ZfYxisuRWkh5Zf9i4-nETtbymEtv4NX_iQieWLLfHlipe7Doo",
-        refreshToken: "WIP"
+        refreshToken: "WIP",
+        queue: [
+            {
+                id: "3ee8Jmje8o58CHK66QrVC2",
+                votes: 3
+            },
+            {
+                id: "31I3Rt1bPa2LrE74DdNizO",
+                votes: 2
+            },
+            {
+                id: "46OFHBw45fNi7QNjSetITR",
+                votes: 0
+            },
+        ]
     }
 ]
 
@@ -72,7 +86,7 @@ function checkRooms() {
         checkQueue(activeRooms[i]["authToken"], activeRooms[i]["roomID"])
     }
 }
-setInterval(checkRooms, 3000);
+// setInterval(checkRooms, 3000);
 
 // Check if room is ready for next song to be queued
 async function checkQueue(authToken, roomID) {
@@ -161,9 +175,17 @@ async function addToQueue(authToken, roomID, trackUID) {
     }
 }
 
-// Homepage endpoint
+// Homepage endpoint (not really useful right now)
 app.get("/", function (req, res) {
     res.sendFile(path.join(public, "index.html"));
+});
+
+app.get("/api/getPlaylist/:roomid", function (req, res) {
+    const roomId = parseInt(req.params.roomid)
+    const playlist = activeRooms.filter(function(item){
+        return item.roomID == roomId;
+    })[0]["queue"]
+    res.json(playlist)
 });
 
 // Serve static files in the public directory
