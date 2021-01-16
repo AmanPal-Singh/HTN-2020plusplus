@@ -22,6 +22,8 @@ const cookieOption = {
 };
 
 
+const client_secret = process.env.client_secret;
+
 
 var generateRandomString = function(length) {
     var text = '';
