@@ -2,7 +2,7 @@ import React from 'react';
 // sample image
 import logo from '../logo.svg';
 import axios from 'axios';
-const access_token ="BQDbgT48axNY_01XKFIZDg1_inM59vzgUdwIEzNss-wil1NS33FA9Xe0R1SVhA3uKOXMI5ivEzmMULg_QAmj5ZRG2Ng7ImxZOop0ne1ZLJtHf03xGQFqPVhl9gzFE14iNUQDslllYZhZj1Qyb4DsixCrWf7AUkiYMjiMDB6b1G0p7Z-2OLBzdHPXHS-ixjoWUzyqd-38-4v7R-6nZOZfFw70SmJa25_JjjFQOQND";
+import {access_token} from '../config';
 
 const Playlist = props => {
   const { roomId } = props;
@@ -10,22 +10,43 @@ const Playlist = props => {
   // search 
   const config = {
     headers: {
-        Authorization: "Bearer " + access_token,
+      Authorization: "Bearer " + access_token,
     }
   }
-  const params = {};
+  const params = {}
+
+  const formatResult = searchResult => {
+    const trackitems = searchResult.data.tracks.items;
+    const parsedResult = trackitems.map(function (track) {
+      return {
+        album: track.album,
+        artists: track.artists,
+        name: track.name,
+        id: track.id,
+        link: track.href,
+        image: track.album.images,
+      };
+    });
+    return parsedResult;
+  }
 
   const request = async query => {
+    // for now only search by track name
     const url = `https://api.spotify.com/v1/search?q=${query}&type=track&market=CA&limit=20`;
     try {
-      const response = await axios.get(url, params, config);
+      const response = await axios.get(url, config, params);
       console.log(response);
+      const formattedResult = formatResult(response);
+      console.log(formattedResult);
+      return formattedResult;
     } 
     catch(error) {
       console.log(error);
     }
   }
-  request('IFLY');
+
+  const searchResults = request('IFLY');
+  console.log(searchResults);
 
   // get data somehow
   console.log(`playlist roomId: ${roomId}`);
@@ -44,7 +65,7 @@ const Playlist = props => {
     },
   ]
 
-  // data
+  // format data
   const rows = data.map((song) => 
     <tr>
       <td>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useForm from '../../hooks/form';
 import { useHistory } from 'react-router-dom';
-//import {logIn} from '../backend/public/main';
+import { client_id, redirect_uri, scope } from '../../config';
 
 const Login = () => {
   // hooks
@@ -15,11 +15,14 @@ const Login = () => {
   // generate random room code and pray its not the same??
   const roomId = Math.floor(Math.random() * 10000); 
 
-  const client_id = '5bacc656ab69429a852568b4140da742';
-  const access_token ="BQDbgT48axNY_01XKFIZDg1_inM59vzgUdwIEzNss-wil1NS33FA9Xe0R1SVhA3uKOXMI5ivEzmMULg_QAmj5ZRG2Ng7ImxZOop0ne1ZLJtHf03xGQFqPVhl9gzFE14iNUQDslllYZhZj1Qyb4DsixCrWf7AUkiYMjiMDB6b1G0p7Z-2OLBzdHPXHS-ixjoWUzyqd-38-4v7R-6nZOZfFw70SmJa25_JjjFQOQND";
-  const redirect_uri = `http://localhost:3000/room`
-  const scope = 'user-read-private user-top-read playlist-modify-public playlist-read-private playlist-read-collaborative app-remote-control user-modify-playback-state';
-
+  // put here temporarily to generate access tokens
+  function logIn() {
+    window.location = 'https://accounts.spotify.com/authorize?'
+        + 'client_id=' + client_id
+        + '&response_type=' + 'token'
+        + '&redirect_uri=' + redirect_uri
+        + '&scope=' + scope;
+  }
 
   const onSubmit = () => {
     // do authentication here
