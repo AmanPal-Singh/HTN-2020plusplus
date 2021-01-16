@@ -1,4 +1,5 @@
 import React from 'react';
+const axios = require('axios');
 
 // sample image
 import logo from '../logo.svg';
@@ -35,6 +36,11 @@ const Playlist = props => {
     </tr>
   );
 
+  const request = () => {
+    console.log('request start');
+    axios.get
+  }
+
   return (
     <div>
       <h2>Playlist</h2>
@@ -50,7 +56,7 @@ const Playlist = props => {
           <tbody>{rows}</tbody>
         </table>
       </div>
-      <button className="standard-button">Request</button>
+      <button className="standard-button" onClick={request}>Request</button>
     </div>
   );
 }
