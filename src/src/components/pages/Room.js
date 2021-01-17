@@ -12,16 +12,6 @@ const Room = props => {
         }
     });
 
-
-    let authToken = null
-    url = "http://localhost:3000/api/getAuthToken/" + roomId;
-    axios.get(url).then(response => {
-        authToken = response.data["authToken"]
-        console.log(authToken)
-    });
-
-    authToken="BQD8wfUWmx-ZAyr9mRy7yUxhy4f2DPi9YBf2_EV5Zw3YyF-V9EwfyDaVw3Pji5y4fa830cyP_jw1ZDgrEdUaImC0MrzekTwM1gbZVTFcUwYlxrlbRi95hmQrfVghJVnxSYkVlQVuHGCpS66s7zzzesSUSnEVEFfKEr9RsAt_QNLnOdZyKCghtAiQ34ugCYxtcPOX7RZSuYxK2lnuJu0XaC-8niTcP74NX0GGDppSFF0";
-
   return (
     <div class="container mt-5 col-md-8">
       <div className="banner">
@@ -36,8 +26,7 @@ const Room = props => {
           </div>
         </div>
       </div>
-    
-      <Playlist roomId={roomId} authToken={authToken}/>
+      <Playlist roomId={roomId}/>
     </div>
   );
 }

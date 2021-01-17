@@ -3,7 +3,17 @@ import axios from 'axios';
 import Song from './Song';
 
 const Playlist = props => {
-  const { roomId, authToken } = props;
+  const { roomId } = props;
+
+  // let authToken;
+  // let url = "http://localhost:3000/api/getAuthToken/" + roomId;
+  // axios.get(url).then(response => {
+  //   authToken = response.data["authToken"]
+  //   console.log(authToken)
+  // });
+
+  let authToken="BQD_dztMt54ymQal-JOORauZ-eZItOxReICzNHk2JQjZMe6VxSl6TRPPxembdqvA2Rxxz6N3_Kjq-hiq6_Ys13QvKED9GDfiAwyLYZ9e_7BIqJOa-yky_fLt2o3wCtJr_Knsub4wvfjlzkjJpICp7K12UUhxYwF6WXPnuBWUM9VRqoGLIIkKkAhTIANnun2hQAT2aiCBs_FQmic53YJu03tz";
+
 
   const config = {
     headers: {
@@ -16,6 +26,26 @@ const Playlist = props => {
   const [searchTerm, setSearchTerm] = useState("");
   const [matches, setMatches] = useState();
   const [playlist, setPlaylist] = useState([]);
+
+  function useInterval(callback, delay) {
+    const savedCallback = useRef();
+
+    // Remember the latest callback.
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+
+    // Set up the interval.
+    useEffect(() => {
+      function tick() {
+        savedCallback.current();
+      }
+      if (delay !== null) {
+        let id = setInterval(tick, delay);
+        return () => clearInterval(id);
+      }
+    }, [delay]);
+  }
 
   // -------------------------------
   // REFRESH PLAYLIST 
@@ -35,17 +65,11 @@ const Playlist = props => {
     }
   };
 
-  // NOTE: for some reason requestPlaylist will trigger itself to run in a loop
-  // if you uncomment the refresh function here it will cause refresh to run every 1s or something
-  // may break your computer?? but will appear as updating in real time
-  // otherwise i set it up so you can refresh ONLY upon clicking a button
-  useEffect(()=> {
-    refresh();
-  })
 
-  const refresh = () => {
-    requestPlaylist();
-  }
+  useInterval(() => {
+    requestPlaylist()
+  }, 1000);
+
 
   // format data from fetch
   const rows = playlist.map((song) => 
@@ -82,6 +106,7 @@ const Playlist = props => {
         setMatches([]); 
         return;
       }
+      console.log(config)
       const response = await axios.get(url, config, params);
       console.log(response);
       const formattedResult = formatResult(response);
@@ -129,7 +154,7 @@ const Playlist = props => {
             {matches}
           </div>
         </ul>
-        <button className="standard-button" onClick={refresh}>
+        <button className="standard-button" onClick={requestPlaylist}>
           Refresh
         </button>
       </div>

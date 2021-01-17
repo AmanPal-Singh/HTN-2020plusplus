@@ -55,9 +55,15 @@ setInterval(checkRooms, 3000);
 
 // Get top song's id and remove it from the queue
 function getAndDeleteTopSong(roomId){
-    var temp = activeRooms.filter(function(item){return item.roomID == roomId;})[0]["queue"].shift()["id"]
-    console.log(temp)
-    return temp
+    try {
+        var temp = activeRooms.filter(function(item){return item.roomID == roomId;})[0]["queue"].shift()["id"]
+        console.log(temp)
+        return temp
+    } catch (e){
+        console.log(roomId, "ERROR fetching top song")
+        return null
+    }
+
 }
 
 // Check if room is ready for next song to be queued
@@ -72,7 +78,8 @@ async function checkQueue(authToken, roomId) {
             addToQueue(authToken, roomId)
         }
     } catch (e) {
-        console.log("ERROR", e.message, e.response.data, e.response.status, e.response.headers);
+        console.log(roomId, "No music playing")
+        // console.log("ERROR", e.message, e.response.data, e.response.status, e.response.headers);
     }
 }
 
@@ -126,10 +133,14 @@ app.get("/loggedin", function (req, res) {
 // ]
 app.get("/api/getPlaylist/:roomid", function (req, res) {
     const roomId = parseInt(req.params.roomid)
-    const playlist = activeRooms.filter(function(item){
-        return item.roomID == roomId;
-    })[0]["queue"]
-    res.json(playlist)
+    try {
+        const playlist = activeRooms.filter(function(item){
+            return item.roomID == roomId;
+        })[0]["queue"]
+        res.json(playlist)
+    } catch (e) {
+        res.json({})
+    }
 });
 
 // Add song to playlist, example POST request
