@@ -4,15 +4,22 @@ import QRCode from 'qrcode.react';
 import axios from "axios";
 
 const Room = props => {
-  const { roomId } = props;
-  const url = window.location.href + roomId;
+    const {roomId} = props;
+    let url = "http://localhost:3000/api/isActiveRoom/" + roomId;
+    axios.get(url).then(response => {
+        if (!response.data["isActiveRoom"]) {
+            window.location.href = '/'
+        }
+    });
 
-  const url = "http://localhost:3000/api/isActiveRoom/" + roomId;
-  axios.get(url).then(response => {
-      if (!response.data["isActiveRoom"]){
-          window.location.href = '/'
-      }
-  })
+
+    let authToken = null
+    url = "http://localhost:3000/api/getAuthToken/" + roomId;
+    axios.get(url).then(response => {
+        authToken = response.data["authToken"]
+        console.log(authToken)
+    });
+
 
   return (
     <div class="container mt-5 col-md-8">
