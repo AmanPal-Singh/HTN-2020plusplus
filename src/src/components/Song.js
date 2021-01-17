@@ -5,7 +5,7 @@ import logo from '../logo.svg';
 
 const Song = props => {
     const [upvoted] = useState(false);
-    const { title, artist, upvotes } = props;
+    const { type, info, title, artist, upvotes } = props;
     // var upvoted= false;
 
     let toggle= () => {
@@ -22,16 +22,16 @@ const Song = props => {
             Lost In the Woods
         </div>
         <div class="song-artist">John</div>
-        <div class="song-votes">
-            <span class="badge badge-primary badge-pill">
-                14
-            </span>
-            <button onClick={toggle} id="upvote" type="button" className={true ? "fill btn btn-sm ml-2": "btn btn-sm ml-2"}>
-                <i onclick="myFunction(this)" className ="fa fa-arrow-up"></i>
-            </button>
 
-        </div>
-        
+            <div class="song-votes">
+                <span class="badge badge-primary badge-pill">
+                    14
+                </span>
+                <button onClick={toggle} id="upvote" type="button" className={true ? "fill btn btn-sm ml-2": "btn btn-sm ml-2"}>
+                    <i className ="fa fa-arrow-up"></i>
+                </button>
+
+            </div>
 
     </div>
   );
