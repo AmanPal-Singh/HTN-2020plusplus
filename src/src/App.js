@@ -5,6 +5,7 @@ import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import Home from './components/pages/Home';
 import Login from './components/pages/Login';
 import Room from './components/pages/Room';
+import LoggedIn from "./components/pages/LoggedIn";
 
 function App() {
   return (
@@ -17,6 +18,10 @@ function App() {
             </Route>
             <Route path="/login" >
               <Login />
+            </Route>
+            <Route path="/loggedIn" >
+              {/*<LoggedIn/>*/}
+              <Home/>
             </Route>
             <Route
               path="/room/:id"
