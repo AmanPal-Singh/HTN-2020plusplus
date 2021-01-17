@@ -131,9 +131,9 @@ const Playlist = props => {
             {matches}
           </div>
         </ul>
-        <button className="standard-button" onClick={refresh}>
+        {/* <button className="standard-button" onClick={refresh}>
           Refresh
-        </button>
+        </button> */}
       </div>
     </div>
   );
