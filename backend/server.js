@@ -1,25 +1,17 @@
 var express = require("express");
 var app = express();
-var request = require("request");
 var http = require("http").createServer(app);
-var path = require("path");
-var public = path.join(__dirname, "public");
-const querystring = require("qs");
 
-const url = require("url");
-const { response } = require("express");
 const axios = require('axios').default;
 
 let activeRooms = [
     {
         roomID: 123,
-        userID: "borkboy420",
-        authToken: "BQDjMlxYPCNmaC6z99NINqjgaOHFmywfTHP8buhg_rnWEQZOmSaZ0fh2WB6mG-YqTyH3SNjYBJZc1cPWFUv97P0GU8hbcpCkZTQNpeHlUSYp9hmi7OqZKBo6eouRwtaWzhVzhTHz7m5L2IH-TEg20PHU-pny4L2mLWyalH4ZfYxisuRWkh5Zf9i4-nETtbymEtv4NX_iQieWLLfHlipe7Doo",
-        refreshToken: "WIP",
+        authToken: "BQDj3uqLpurMSixBp6gZQArwNmKUTpXCKfTTPcITGHxbyUY39xqFJzPm8JCGWeMbeZd_3mgKvLcQZ16T4dgiinRaRzhqanM0uqueMhEw3zznHwQexzpIinz7enZ3eGuF6GB9wb04-Klkt38oy3lQjvjhY0nss_Ymr-6IOZeK3aIn-7d9X6mFvTx-gOxpCoBs-Z3GNQxAl_2j_FELJ5JYeAPc",
         queue: [
             {
                 id: "3ee8Jmje8o58CHK66QrVC2",
-                votes: 3
+                votes: 2
             },
             {
                 id: "31I3Rt1bPa2LrE74DdNizO",
@@ -27,37 +19,30 @@ let activeRooms = [
             },
             {
                 id: "46OFHBw45fNi7QNjSetITR",
-                votes: 0
+                votes: 4
             },
         ]
     }
 ]
 
-const client_id = '3b83df1eb5414ccfa16275dc089add12';
-// const redirect_uri = 'insert prod url here'
-const redirect_uri = 'http://localhost:3000/loggedIn'
 
-const stateKey = "spotify_auth_state";
-const refreshKey = "refresh_key";
-const cookieOption = {
-	// Comment out the following 2 lines while in development for the authoriazation flow to work properly
-	// sameSite:'None',
-	// secure: true
-};
+// var stableSort = (arr, compare) => arr
+//     .map((item, index) => ({item, index}))
+//     .sort((a, b) => compare(a.item, b.item) || a.index - b.index)
+//     .map(({item}) => item)
+//
+// function sortQueue(roomId){
+//     stableSort(activeRooms.filter(function(item){
+//         return item.roomID == roomId;
+//     })[0]["queue"], (a, b)=>a.votes - b.votes)
+// }
 
-
-const client_secret = process.env.client_secret;
-
-
-var generateRandomString = function(length) {
-    var text = '';
-    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  
-    for (var i = 0; i < length; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-  };
+// function getTopSong(roomId){
+//     const songId = activeRooms.filter(function(item){
+//         return item.roomID == roomId;
+//     })[0]["queue"]
+//
+// }
 
 // Array of rooms to temporarily ignore adding new songs to
 var inactiveRoomQueues = []
@@ -106,57 +91,6 @@ async function checkQueue(authToken, roomID) {
     }
 }
 
-app.get('/userLogin', function (req, res){
-    
-    // use Spotify API to get request
-
-    const state = generateRandomString(16);
-    res.cookie(stateKey, state);
-    
-    var scope = 'user-read-private user-top-read playlist-modify-public playlist-read-private playlist-read-collaborative app-remote-control user-modify-playback-state';
-    res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-      response_type: 'code',
-      client_id: client_id,
-      scope: scope,
-      redirect_uri: redirect_uri,
-      state: state,
-      show_dialog: true,
-    }));
-
-    console.log("Logged In!");
-});
-
-app.get('/refreshLogin', function(req, res){
-    var refresh_token = req.query.refresh_token;
-    var authOptions = {
-        url: 'https://accounts.spotify.com/api/token',
-        headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
-        form: {
-        grant_type: 'refresh_token',
-        refresh_token: refresh_token
-        },
-        json: true
-    }
-
-    // send post request to get new token
-    request.post(authOptions, function(error, response, body){
-        if (!error && response.statusCode == 200){
-            var access_token = body.access_token;
-            res.send({
-                'access_token': access_token
-            });
-        }
-    });
-    console.log("Token Refreshed!");
-});
-
-app.get("/logout", (req, res) => {
-    res.clearCookie(refreshKey, cookieOption);
-    res.status(200).send("successfully logged out!");
-});
-
-
 // Add song to end of queue
 async function addToQueue(authToken, roomID, trackUID) {
     if (inactiveRoomQueues.includes(roomID)){
@@ -177,19 +111,19 @@ async function addToQueue(authToken, roomID, trackUID) {
     }
 }
 
-// Homepage endpoint (not really useful right now)
-app.get("/", function (req, res) {
-    res.sendFile(path.join(public, "index.html"));
-});
 
 app.get("/loggedin", function (req, res) {
-    //parsing
-    //generate room + redirect to their acc room
+    const accessToken = req.query.token
+    console.log(accessToken)
+    const newRoomId = Math.floor(Math.random() * (10000 - 1000) + 1000)
 
-    // let re = /access_token=(.*)&token/g;
-    // let accessToken = (re.exec());
-    console.log(req)
-    res.send("HI")
+    activeRooms.push({
+        roomID: newRoomId,
+        authToken: accessToken,
+        queue: []
+    })
+    console.log(activeRooms);
+    res.redirect('http://localhost:3001/room/' + newRoomId)
 });
 
 
@@ -220,20 +154,35 @@ app.post("/api/addToPlaylist/:roomid", function (req, res) {
     activeRooms.filter(function(item){
         return item.roomID == roomId;
     })[0]["queue"].push({id:songId, votes: 1})
+    // sortQueue(roomId)
     console.log(roomId, "Added song", songId)
     res.json({added_song: songId})
 });
 
-// Serve static files in the public directory
-app.use(express.static("public"));
+
+// Upvote/downvote song, params= [songID, voteType] where voteType is one of ["up", "down"]
+// Example POST http://localhost:3000/api/songVote/123?songId=46OFHBw45fNi7QNjSetITR&voteType=down
+app.post("/api/songVote/:roomid", function (req, res) {
+    const roomId = parseInt(req.params.roomid)
+    const songId = req.query.songId
+    const voteType = req.query.voteType
+    const toAdd = voteType === "up" ? 1 : -1
+
+    activeRooms.filter(function(item){return item.roomID == roomId;})
+        [0]["queue"].filter(function (item){return item.id == songId})[0]["votes"] += toAdd
+    // sortQueue(roomId)
+    console.log(roomId, "Song", songId, "incremented by", toAdd)
+    res.json({song_voted_on: songId})
+});
+
+app.get("/api/getAuthToken/:roomid", function (req, res) {
+    const roomId = parseInt(req.params.roomid)
+    const authToken = activeRooms.filter(function(item){
+        return item.roomID == roomId;
+    })[0]["authToken"]
+    res.json({authToken: authToken})
+});
 
 // Listen on port 3000
 var port = 3000;
 http.listen(port, () => console.log(`Server listening http://localhost:${port}`));
-
-
-
-app.get("/", function (req, res) {
-    res.sendFile(path.join(public, "index.html"));
-});
-
