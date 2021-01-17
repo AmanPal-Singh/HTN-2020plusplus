@@ -19,8 +19,7 @@ function App() {
               <Login />
             </Route>
             <Route path="/loggedIn" >
-              {/*<LoggedIn/>*/}
-              <Home/>
+              <LoggedIn/>
             </Route>
             <Route
               path="/room/:id"
