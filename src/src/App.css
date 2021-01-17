@@ -36,6 +36,7 @@ html, .App {
   text-align: right;
   grid-column-start: 5;
   grid-column-end: 6;
+  align-self: center;
 }
 
 
@@ -69,11 +70,11 @@ html, .App {
   justify-content: space-between;
 } */
 
-.tracks .track_art img {
-  /* width: 42px; */
-  /* height: 42px;
-   */
-  padding-right: 20px
+.track-img {
+  width: 42px;
+  height: 42px;
+  
+  /* padding-right: 20px */
 }
 
 .fill {

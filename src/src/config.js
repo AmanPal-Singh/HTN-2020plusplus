@@ -1,4 +1,4 @@
 export const client_id = '5bacc656ab69429a852568b4140da742'; // amys client id
-export const access_token ="BQDDD3G2lmPiF8On5qCOmgsin0B5cN9y6m0KF-dWzM6ymwGTz0TxjC2jH99KytApLoeIXbG-SnfjlO8Wcb4T6SSFSbInNs-YrPyy1Z212Mc0G_ku6Am_IUsbVdRVKwEHH61vF7VZSeefmUg5w3WW_WbCwsLbYaGzTzqUo4rcZeNI0yNs0ZI8YKPa_55yogWvts26Q-FViPakxbraqIZpNWljKOGATba7jhUNspfs";
+export const access_token ="BQAziI-0NJWOoMwNQhiJArctA2VUvCFZ2Yh87DeDCYQrkBfo1I7UXltfr7w76EnQp1IfoiyPOfRWvpX0WCalv8jF2bey-hNIxM4hDFj8mRyiwBUlanRK5kmwoOVK9ctZCQPq0sZz3S7xZkuBH-V5_i5p2bc2kU0Qsv0tgwMcGekIuP-VKCxCKhvYSlfu-toBxlyVmIwrphFGUcnFbOBz_1R58BuWXwwWAkEpzDEH";
 export const redirect_uri = `http://localhost:3000/room` // need to whitelist to accept any room code so we can redirect
 export const scope = 'user-read-private user-top-read playlist-modify-public playlist-read-private playlist-read-collaborative app-remote-control user-modify-playback-state';
