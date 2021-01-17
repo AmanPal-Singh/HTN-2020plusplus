@@ -4,6 +4,7 @@ import QRCode from 'qrcode.react';
 
 const Room = props => {
   const { roomId } = props;
+  const url = window.location.href + roomId;
 
   return (
     <div class="container mt-5 col-md-8">
@@ -14,7 +15,7 @@ const Room = props => {
           <p id="green">upvote and add songs</p>
         </div>
         <div class="item-two">
-          <QRCode value={`placeholder/room/${roomId}`} />
+          <QRCode value={`${url}`} />
         </div>
       </div>
       <Playlist roomId={roomId} />
