@@ -1,10 +1,18 @@
 import React from 'react';
 import Playlist from '../Playlist';
 import QRCode from 'qrcode.react';
+import axios from "axios";
 
 const Room = props => {
   const { roomId } = props;
   const url = window.location.href + roomId;
+
+  const url = "http://localhost:3000/api/isActiveRoom/" + roomId;
+  axios.get(url).then(response => {
+      if (!response.data["isActiveRoom"]){
+          window.location.href = '/'
+      }
+  })
 
   return (
     <div class="container mt-5 col-md-8">
