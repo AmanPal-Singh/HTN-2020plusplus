@@ -4,16 +4,13 @@ import Song from './Song';
 
 const Playlist = props => {
   const { roomId } = props;
+  const [authToken, setAuthToken] = useState();
 
-  // let authToken;
-  // let url = "http://localhost:3000/api/getAuthToken/" + roomId;
-  // axios.get(url).then(response => {
-  //   authToken = response.data["authToken"]
-  //   console.log(authToken)
-  // });
-
-  let authToken="BQD_dztMt54ymQal-JOORauZ-eZItOxReICzNHk2JQjZMe6VxSl6TRPPxembdqvA2Rxxz6N3_Kjq-hiq6_Ys13QvKED9GDfiAwyLYZ9e_7BIqJOa-yky_fLt2o3wCtJr_Knsub4wvfjlzkjJpICp7K12UUhxYwF6WXPnuBWUM9VRqoGLIIkKkAhTIANnun2hQAT2aiCBs_FQmic53YJu03tz";
-
+  let url = "http://localhost:3000/api/getAuthToken/" + roomId;
+  axios.get(url).then(response => {
+    setAuthToken(response.data["authToken"]);
+    console.log("autho here" + authToken)
+  });
 
   const config = {
     headers: {
