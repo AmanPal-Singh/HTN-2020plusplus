@@ -1,6 +1,8 @@
 var express = require("express");
+var cors = require('cors')
 var app = express();
 var http = require("http").createServer(app);
+app.use(cors())
 
 const axios = require('axios').default;
 
