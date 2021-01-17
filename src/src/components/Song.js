@@ -8,7 +8,7 @@ import logo from '../logo.svg';
 
 const Song = props => {
     const [upvoted] = useState(false);
-    const { type, info, title, artist, upvotes } = props;
+    const { type, info, title, artist, upvotes, room } = props;
     // var upvoted= false;
     const params = {}
     const config = {

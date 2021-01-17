@@ -1,4 +1,4 @@
-import React , {useState} from 'react';
+import React , {useState, useEffect, useRef} from 'react';
 // sample image
 import logo from '../logo.svg';
 import axios from 'axios';
@@ -8,12 +8,92 @@ import Song from './Song';
 const Playlist = props => {
   const { roomId } = props;
   var results = [];
+  var playlist = [];
+  var playlistId = "";
+  var playlistInfo = [];
 
   const [searchTerm, setSearchTerm] = useState("");
   const [matches, setMatches] = useState();
 
-
+  // let useInterval = (callback, delay) => {
+  //   const savedCallback = useRef();
   
+  //   // Remember the latest callback.
+  //   useEffect(() => {
+  //     savedCallback.current = callback;
+  //   }, [callback]);
+  
+  //   // Set up the interval.
+  //   useEffect(() => {
+  //     function tick() {
+  //       savedCallback.current();
+  //     }
+  //     if (delay !== null) {
+  //       let id = setInterval(tick, delay);
+  //       return () => clearInterval(id);
+  //     }
+  //   }, [delay]);
+
+  const requestPlaylist = async query => {
+    // for now only search by track name
+    const url = `http://localhost:3000/api/getPlaylist/123`;
+    try {
+      const response = await axios.get(url);
+      console.log(response.data);
+      console.log("called get playlist")
+      playlist = response.data;
+      // playlistInfo = playlist.reduce((acc, { id, votes }) => {
+      //   id
+      //   // acc[company] = acc[company] || {};
+      //   // acc[company][country] = acc[company][country] || {};
+      //   // acc[company][country][employee] = null;
+      //   return acc;
+      // }, {});
+      for (var i = 0; i < playlist.length; i++) {
+        playlistId += playlist[i].id + ","
+      }
+
+      console.log("reduced?" + playlistId);
+      requestSongInfo();
+
+      
+      // outputHtml(formattedResult);
+      
+      // matchList.innerHTML = `<div></div>`;
+      return response.data;
+    } 
+    catch(error) {
+      console.log(error);
+    }
+  };
+
+  const requestSongInfo = async query => {
+    // for now only search by track name
+    const url = `https://api.spotify.com/v1/tracks?ids=${playlistId}`;
+    try {
+      const response = await axios.get(url);
+      console.log(response.data);
+      console.log("called get playlist")
+      playlist = response.data;
+      
+      // outputHtml(formattedResult);
+      
+      // matchList.innerHTML = `<div></div>`;
+      return response.data;
+    } 
+    catch(error) {
+      console.log(error);
+    }
+  };
+
+  // useInterval(() => {
+  //   requestPlaylist()
+  // }, 3000);
+
+
+
+  setInterval(requestPlaylist, 5000);
+
 
   const request = async query => {
     // for now only search by track name
@@ -94,9 +174,6 @@ const Playlist = props => {
     </li>
   );
 
-
-  
-
   return (
     <div>
       <div className="playlist-container">
@@ -120,6 +197,6 @@ const Playlist = props => {
       </div>
     </div>
   );
-}
+          }
 
 export default Playlist;
