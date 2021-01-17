@@ -172,7 +172,7 @@ const Playlist = props => {
   // format data
   const rows = data.map((song) => 
     <li class="list-group-item d-flex justify-content-between align-items-center">
-    <Song type="voted" roomId={roomId} upvotes={0} artist="John" title="Lost in the Woods" id={song.id} />
+    <Song type='vote' roomId={roomId} upvotes={0} artist="John" title="Lost in the Woods" id={song.id} />
     </li>
   );
 
@@ -187,7 +187,6 @@ const Playlist = props => {
             </input> */}
             <input
             id="search" type="text" class="form-control form-control-lg"
-            type="text"
             placeholder="Search"
             value={searchTerm}
             onChange={handleChange}/>
