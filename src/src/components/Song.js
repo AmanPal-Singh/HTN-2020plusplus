@@ -7,6 +7,7 @@ const Song = props => {
     // HOOKS
     const [info, setInfo] = useState(!!props.info ? props.info : null);
     const [upvoteCount, setUpvoteCount] = useState(upvotes);
+    
     const [voteStatus, setVoteStatus] = useState(localStorage.getItem(`upvoteCookie${id}`) ? localStorage.getItem(`upvoteCookie${id}`) : 'notvoted');
 
     // CONFIG FOR API REQUESTS
@@ -25,6 +26,8 @@ const Song = props => {
         console.log(voteStatus);
         localStorage.setItem(`upvoteCookie${id}`, voteStatus);
         console.log(localStorage);
+        console.log("UPVOTES" + upvotes)
+        console.log(upvoteCount)
     }, [id, voteStatus]);
 
     const requestAddUpvote = async (id, type) => {
@@ -43,6 +46,9 @@ const Song = props => {
     const toggle = () => {
         console.log("Great Shot!");
         setUpvoteCount(voteStatus === 'notvoted' ? upvoteCount+1 : upvoteCount-1);
+        // upvoteCount = voteStatus === 'notvoted' ? upvoteCount+1 : upvoteCount-1;
+        
+        
         setVoteStatus(voteStatus === 'voted' ? 'notvoted' : 'voted');
         // update upvote count in backend too
         requestAddUpvote(id, voteStatus === 'notvoted' ? 'up' : 'down');
@@ -91,6 +97,9 @@ const Song = props => {
       }
     
     const requestSongInfo = async songId => {
+        // setUpvoteCount(upvoteCount)
+        console.log("COUNT HERE", upvoteCount);
+         
         // for now only search by track name
         const url = `https://api.spotify.com/v1/tracks?ids=${songId}`;
         try {
@@ -137,7 +146,8 @@ const Song = props => {
             {type === 'playlist' ?
                 <div className="song-votes">
                     <span className="badge badge-primary badge-pill">
-                        {upvoteCount}
+                        {/* {upvoteCount} */}
+                        {upvotes}
                     </span>
                     <button onClick={toggle} id="upvote" type="button" 
                         className={voteStatus === 'voted' ? "fill btn btn-sm ml-2": "btn btn-sm ml-2"}>

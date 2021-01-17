@@ -23,6 +23,7 @@ const Playlist = props => {
   const [searchTerm, setSearchTerm] = useState("");
   const [matches, setMatches] = useState();
   const [playlist, setPlaylist] = useState([]);
+  // const [playlist, setPlaylist] = useState([]);
 
   function useInterval(callback, delay) {
     const savedCallback = useRef();
@@ -52,9 +53,15 @@ const Playlist = props => {
     const url = `http://localhost:3000/api/getPlaylist/${roomId}`;
     try {
       const response = await axios.get(url);
-      console.log("called get playlist");
+      // console.log("called get playlist");
       console.log(response.data);
       setPlaylist(response.data);
+
+      rows = playlist.map((song) => 
+      <li class="list-group-item d-flex justify-content-between align-items-center" key={song.id}>
+        <Song authToken={authToken} type='playlist' roomId={roomId} upvotes={song.votes} id={song.id} />
+      </li>
+    );
       return;// response.data;
     } 
     catch(error) {
@@ -69,7 +76,7 @@ const Playlist = props => {
 
 
   // format data from fetch
-  const rows = playlist.map((song) => 
+  var rows = playlist.map((song) => 
     <li class="list-group-item d-flex justify-content-between align-items-center" key={song.id}>
       <Song authToken={authToken} type='playlist' roomId={roomId} upvotes={song.votes} id={song.id} />
     </li>
@@ -105,9 +112,9 @@ const Playlist = props => {
       }
       console.log(config)
       const response = await axios.get(url, config, params);
-      console.log(response);
+      // console.log(response);
       const formattedResult = formatResult(response);
-      console.log(formattedResult);
+      // console.log(formattedResult);
 
       setMatches(formattedResult.map((song) => 
         <li class="list-group-item d-flex justify-content-between align-items-center" key={song.id}>
