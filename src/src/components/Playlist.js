@@ -25,8 +25,8 @@ const Playlist = props => {
     const url = `http://localhost:3000/api/getPlaylist/${roomId}`;
     try {
       const response = await axios.get(url);
-      console.log("called get playlist");
-      console.log(response.data);
+      // console.log("called get playlist");
+      console.log("HELLO" + authToken);
       setPlaylist(response.data);
       return;// response.data;
     } 
@@ -39,13 +39,15 @@ const Playlist = props => {
   // if you uncomment the refresh function here it will cause refresh to run every 1s or something
   // may break your computer?? but will appear as updating in real time
   // otherwise i set it up so you can refresh ONLY upon clicking a button
-  useEffect(()=> {
-    refresh();
-  })
+  // useEffect(()=> {
+  //   refresh();
+  // })
 
   const refresh = () => {
     requestPlaylist();
   }
+
+  setInterval(requestPlaylist, 1000);
 
   // format data from fetch
   const rows = playlist.map((song) => 
@@ -83,9 +85,9 @@ const Playlist = props => {
         return;
       }
       const response = await axios.get(url, config, params);
-      console.log(response);
+      // console.log(response);
       const formattedResult = formatResult(response);
-      console.log(formattedResult);
+      // console.log(formattedResult);
 
       setMatches(formattedResult.map((song) => 
         <li class="list-group-item d-flex justify-content-between align-items-center" key={song.id}>
