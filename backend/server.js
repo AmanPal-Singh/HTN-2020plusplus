@@ -9,42 +9,36 @@ const axios = require('axios').default;
 let activeRooms = [
     {
         roomID: 123,
-        authToken: "BQDj3uqLpurMSixBp6gZQArwNmKUTpXCKfTTPcITGHxbyUY39xqFJzPm8JCGWeMbeZd_3mgKvLcQZ16T4dgiinRaRzhqanM0uqueMhEw3zznHwQexzpIinz7enZ3eGuF6GB9wb04-Klkt38oy3lQjvjhY0nss_Ymr-6IOZeK3aIn-7d9X6mFvTx-gOxpCoBs-Z3GNQxAl_2j_FELJ5JYeAPc",
+        authToken: "BQCVMk463eoBr8tMWWCqyIAKQKP83VYVzOwRZpRAU7oS0mw_h18Mebx0uwd6PSIrJzBfq0IBcUIMzE74iqO98T67O9UQkeNiRljablIv2vuK2_C9FHAfpotTBnE_8OUKqOradhA_w72X8Wn1dAXiN0E8Qt15IlUjyFySHKDabLoGNaOHoJuWbNQxycOnlhfVPY6Mcbtty4UdUKZn6biFJJYc",
         queue: [
             {
                 id: "3ee8Jmje8o58CHK66QrVC2",
-                votes: 2
+                votes: 4
             },
             {
                 id: "31I3Rt1bPa2LrE74DdNizO",
-                votes: 2
+                votes: 3
             },
             {
                 id: "46OFHBw45fNi7QNjSetITR",
-                votes: 4
+                votes: 2
             },
         ]
     }
 ]
 
+// Proprietary stable sorting algorithm
+var stableSort = (arr, compare) => arr
+    .map((item, index) => ({item, index}))
+    .sort((a, b) => compare(a.item, b.item) || a.index - b.index)
+    .map(({item}) => item)
 
-// var stableSort = (arr, compare) => arr
-//     .map((item, index) => ({item, index}))
-//     .sort((a, b) => compare(a.item, b.item) || a.index - b.index)
-//     .map(({item}) => item)
-//
-// function sortQueue(roomId){
-//     stableSort(activeRooms.filter(function(item){
-//         return item.roomID == roomId;
-//     })[0]["queue"], (a, b)=>a.votes - b.votes)
-// }
-
-// function getTopSong(roomId){
-//     const songId = activeRooms.filter(function(item){
-//         return item.roomID == roomId;
-//     })[0]["queue"]
-//
-// }
+// Sort a rooms queue from biggest to smallest
+function sortQueue(roomId){
+    activeRooms.filter(function(item){return item.roomID == roomId;})[0]["queue"] =
+        stableSort(activeRooms.filter(function(item){return item.roomID == roomId;})
+            [0]["queue"],(a, b)=>b.votes - a.votes)
+}
 
 // Array of rooms to temporarily ignore adding new songs to
 var inactiveRoomQueues = []
@@ -75,18 +69,25 @@ function checkRooms() {
         checkQueue(activeRooms[i]["authToken"], activeRooms[i]["roomID"])
     }
 }
-// setInterval(checkRooms, 3000);
+setInterval(checkRooms, 3000);
+
+// Get top song's id and remove it from the queue
+function getAndDeleteTopSong(roomId){
+    var temp = activeRooms.filter(function(item){return item.roomID == roomId;})[0]["queue"].shift()["id"]
+    console.log(temp)
+    return temp
+}
 
 // Check if room is ready for next song to be queued
-async function checkQueue(authToken, roomID) {
+async function checkQueue(authToken, roomId) {
     const url = "https://api.spotify.com/v1/me/player"
     try{
         const response = await axios.get(url, getAuthHeader(authToken))
         const data = response.data
         const timeToEnd = data["item"]["duration_ms"] - data["progress_ms"]
-        console.log(roomID, timeToEnd)
+        console.log(roomId, timeToEnd)
         if (timeToEnd < 10000){
-            addToQueue(authToken, roomID,"spotify:track:3ee8Jmje8o58CHK66QrVC2")
+            addToQueue(authToken, roomId)
         }
     } catch (e) {
         console.log("ERROR", e.message, e.response.data, e.response.status, e.response.headers);
@@ -94,26 +95,27 @@ async function checkQueue(authToken, roomID) {
 }
 
 // Add song to end of queue
-async function addToQueue(authToken, roomID, trackUID) {
-    if (inactiveRoomQueues.includes(roomID)){
-        console.log(roomID, "already added song to queue, skipping...")
+async function addToQueue(authToken, roomId) {
+    if (inactiveRoomQueues.includes(roomId)){
+        console.log(roomId, "already added song to queue, skipping...")
         return
     }
-    tempAddToList(roomID)
-    const url = "https://api.spotify.com/v1/me/player/queue?uri=" + trackUID
+    let trackId = "spotify:track:"+getAndDeleteTopSong(roomId)
+    tempAddToList(roomId)
+    const url = "https://api.spotify.com/v1/me/player/queue?uri=" + trackId
     const config = getAuthHeader(authToken)
     try {
         const response = await axios.post(url, {}, config)
         const data = response.data
         if (!data){
-            console.log(roomID, "succesfully queued ", trackUID)
+            console.log(roomId, "succesfully queued ", trackId)
         }
     } catch (e){
         console.log("ERROR", e.message, e.response.data, e.response.status, e.response.headers);
     }
 }
 
-
+// Create new room after redirect from Spotify authentication
 app.get("/loggedin", function (req, res) {
     const accessToken = req.query.token
     console.log(accessToken)
@@ -172,17 +174,25 @@ app.post("/api/songVote/:roomid", function (req, res) {
 
     activeRooms.filter(function(item){return item.roomID == roomId;})
         [0]["queue"].filter(function (item){return item.id == songId})[0]["votes"] += toAdd
-    // sortQueue(roomId)
+    sortQueue(roomId)
     console.log(roomId, "Song", songId, "incremented by", toAdd)
     res.json({song_voted_on: songId})
 });
 
+// Get authentication token by roomId
 app.get("/api/getAuthToken/:roomid", function (req, res) {
     const roomId = parseInt(req.params.roomid)
     const authToken = activeRooms.filter(function(item){
         return item.roomID == roomId;
     })[0]["authToken"]
     res.json({authToken: authToken})
+});
+
+// Check if room is active
+app.get("/api/isActiveRoom/:roomid", function (req, res) {
+    const roomId = parseInt(req.params.roomid)
+    const authToken = (activeRooms.filter(function(item){return item.roomID === roomId;}).length === 1)
+    res.json({isActiveRoom: authToken})
 });
 
 // Listen on port 3000
