@@ -58,18 +58,20 @@ const Playlist = props => {
       title: "song1",
       artist: "artist1",
       image: logo,
+      id: 1,
     },
     {
       title: "song2",
       artist: "artist2",
       image: logo,
+      id: 2,
     },
   ]
 
   // format data
   const rows = data.map((song) => 
     <li class="list-group-item d-flex justify-content-between align-items-center">
-    <Song></Song>
+    <Song roomId={roomId} upvotes={0} artist="John" title="Lost in the Woods" id={song.id} />
     </li>
   );
 

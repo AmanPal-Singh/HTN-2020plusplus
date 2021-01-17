@@ -30,8 +30,8 @@ const Login = () => {
     // otherwise error
     // currrently user and host see the same page
     if (username !== '' && password !== '') {
-      //logIn(client_id, redirect_uri, scope);
-      console.log('login done');
+      logIn(client_id, redirect_uri, scope);
+      //console.log('login done');
       history.push(`/room/${roomId}`);
     } else {
       setError(true);
