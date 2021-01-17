@@ -8,14 +8,14 @@ const Song = props => {
     const { type, info, title, artist, upvotes } = props;
     // var upvoted= false;
 
-    let toggle= () => {
-        console.log("Great Shot!");
+    let toggle= (id) => {
+        console.log("Great Shot!" + id);
         // upvoted = !upvoted;
         // this.setState({ upvoted: !this.state.upvoted });
     }
 
-    let add= () => {
-        console.log("Great add!");
+    let add= (id) => {
+        console.log("Great add!" + id);
         // upvoted = !upvoted;
         // this.setState({ upvoted: !this.state.upvoted });
     }
@@ -37,13 +37,13 @@ const Song = props => {
                 <span className="badge badge-primary badge-pill">
                     14
                 </span>
-                <button onClick={toggle} id="upvote" type="button" className={true ? "fill btn btn-sm ml-2": "btn btn-sm ml-2"}>
+                <button onClick={() =>{toggle(info.id)}} id="upvote" type="button" className={true ? "fill btn btn-sm ml-2": "btn btn-sm ml-2"}>
                     <i className ="fa fa-arrow-up"></i>
                 </button>
             </div>
             :
             <div className="song-votes">
-                <button onClick={add} type="button" className="btn btn-sm ml-2">
+                <button onClick={() =>{add(info.id)}} type="button" className="btn btn-sm ml-2">
                 <i className="fa fa-lg fa-plus-circle" aria-hidden="true"></i>
                 </button>
             </div>
