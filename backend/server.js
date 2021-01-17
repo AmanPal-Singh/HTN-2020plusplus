@@ -188,6 +188,13 @@ app.get("/api/getAuthToken/:roomid", function (req, res) {
     res.json({authToken: authToken})
 });
 
+// Check if room is active
+app.get("/api/isActiveRoom/:roomid", function (req, res) {
+    const roomId = parseInt(req.params.roomid)
+    const authToken = (activeRooms.filter(function(item){return item.roomID === roomId;}).length === 1)
+    res.json({isActiveRoom: authToken})
+});
+
 // Listen on port 3000
 var port = 3000;
 http.listen(port, () => console.log(`Server listening http://localhost:${port}`));
