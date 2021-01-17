@@ -12,6 +12,9 @@ const Playlist = props => {
   const [searchTerm, setSearchTerm] = useState("");
   const [matches, setMatches] = useState();
 
+
+  
+
   const request = async query => {
     // for now only search by track name
     const url = `https://api.spotify.com/v1/search?q=${query}&type=track&market=CA&limit=10`;
@@ -23,10 +26,10 @@ const Playlist = props => {
       results = formattedResult;
 
       setMatches(formattedResult.map((song) => 
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-      <Song info={song}></Song>
-    </li>
-  ));
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <Song info={song}></Song>
+        </li>
+      ));
       // outputHtml(formattedResult);
       
       // matchList.innerHTML = `<div></div>`;
@@ -35,7 +38,7 @@ const Playlist = props => {
     catch(error) {
       console.log(error);
     }
-  }
+  };
   var searchResults = request('IFLY');
 
   const handleChange = event => {
