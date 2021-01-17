@@ -11,28 +11,43 @@ const Song = props => {
     let toggle= () => {
         console.log("Great Shot!");
         // upvoted = !upvoted;
-        this.setState({ upvoted: !this.state.upvoted });
+        // this.setState({ upvoted: !this.state.upvoted });
     }
+
+    let add= () => {
+        console.log("Great add!");
+        // upvoted = !upvoted;
+        // this.setState({ upvoted: !this.state.upvoted });
+    }
+
+
 
   return (
     <div class="grid-song">
         <div class="song-title">
-            <img src="../logo.svg"></img>
+            <img src={info? info.image[0].url : "../logo.svg"} className="track-img"></img>
             &nbsp;
-            Lost In the Woods
+            {info && info.album? info.album.name : "Lost In the Woods"}
         </div>
-        <div class="song-artist">John</div>
-
-            <div class="song-votes">
-                <span class="badge badge-primary badge-pill">
+        <div class="song-artist">
+            {info? info.artists[0].name: "john wall"}
+        </div>
+        {props.type == "voted"?
+            <div className="song-votes">
+                <span className="badge badge-primary badge-pill">
                     14
                 </span>
                 <button onClick={toggle} id="upvote" type="button" className={true ? "fill btn btn-sm ml-2": "btn btn-sm ml-2"}>
                     <i className ="fa fa-arrow-up"></i>
                 </button>
-
             </div>
-
+            :
+            <div className="song-votes">
+                <button onClick={add} type="button" className="btn btn-sm ml-2">
+                <i className="fa fa-lg fa-plus-circle" aria-hidden="true"></i>
+                </button>
+            </div>
+        }
     </div>
   );
 }
