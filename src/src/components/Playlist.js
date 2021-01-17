@@ -3,6 +3,7 @@ import React from 'react';
 import logo from '../logo.svg';
 import axios from 'axios';
 import {access_token} from '../config';
+import Song from './Song';
 
 const Playlist = props => {
   const { roomId } = props;
@@ -32,7 +33,7 @@ const Playlist = props => {
 
   const request = async query => {
     // for now only search by track name
-    const url = `https://api.spotify.com/v1/search?q=${query}&type=track&market=CA&limit=20`;
+    const url = `https://api.spotify.com/v1/search?q=${query}&type=track&market=CA&limit=10`;
     try {
       const response = await axios.get(url, config, params);
       console.log(response);
@@ -67,31 +68,23 @@ const Playlist = props => {
 
   // format data
   const rows = data.map((song) => 
-    <tr>
-      <td>
-        <div className="song-icon">
-          <img src={song.image} />
-        </div>
-      </td>
-      <td>{song.title}</td>
-      <td>{song.artist}</td>
-    </tr>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+    <Song></Song>
+    </li>
   );
 
   return (
     <div>
-      <h2>Playlist</h2>
       <div className="playlist-container">
-        <table className="playlist">
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Title</th>
-              <th>Artist</th>
-            </tr>
-          </thead>
-          <tbody>{rows}</tbody>
-        </table>
+        <ul class="mt-4 list-group">
+          {rows}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <input id="search" type="text" class="form-control form-control-lg"
+              placeholder="name">    
+            </input>
+          </li>
+          <div id="match-list"></div>
+        </ul>
       </div>
       <button className="standard-button" onClick={request}>Request</button>
     </div>

@@ -6,12 +6,18 @@ const Room = props => {
   const { roomId } = props;
 
   return (
-    <div>
-      <h1>Party Room</h1>
-      <p>{`Welcome to room ${roomId}`}</p>
+    <div class="container mt-5 col-md-8">
+      <div class="grid">
+        <div class="item-one">
+          <h1 id="green" >{`room ${roomId}`}</h1>
+          <p id="green">scan the code to share!</p>
+          <p id="green">upvote and add songs</p>
+        </div>
+        <div class="item-two">
+          <QRCode value={`placeholder/room/${roomId}`} />
+        </div>
+      </div>
       <Playlist roomId={roomId} />
-      <h2>QR Code </h2>
-      <QRCode value={`placeholder/room/${roomId}`} />
     </div>
   );
 }
