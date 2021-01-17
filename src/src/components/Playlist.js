@@ -1,137 +1,62 @@
 import React , {useState, useEffect, useRef} from 'react';
-// sample image
-import logo from '../logo.svg';
 import axios from 'axios';
-import {access_token} from '../config';
 import Song from './Song';
 
 const Playlist = props => {
-  const { roomId } = props;
-  var results = [];
-  var playlist = [];
-  var playlistId = "";
-  var playlistInfo = [];
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [matches, setMatches] = useState();
-
-  // let useInterval = (callback, delay) => {
-  //   const savedCallback = useRef();
-  
-  //   // Remember the latest callback.
-  //   useEffect(() => {
-  //     savedCallback.current = callback;
-  //   }, [callback]);
-  
-  //   // Set up the interval.
-  //   useEffect(() => {
-  //     function tick() {
-  //       savedCallback.current();
-  //     }
-  //     if (delay !== null) {
-  //       let id = setInterval(tick, delay);
-  //       return () => clearInterval(id);
-  //     }
-  //   }, [delay]);
-
-  const requestPlaylist = async query => {
-    // for now only search by track name
-    const url = `http://localhost:3000/api/getPlaylist/123`;
-    try {
-      const response = await axios.get(url);
-      console.log(response.data);
-      console.log("called get playlist")
-      playlist = response.data;
-      // playlistInfo = playlist.reduce((acc, { id, votes }) => {
-      //   id
-      //   // acc[company] = acc[company] || {};
-      //   // acc[company][country] = acc[company][country] || {};
-      //   // acc[company][country][employee] = null;
-      //   return acc;
-      // }, {});
-      for (var i = 0; i < playlist.length; i++) {
-        playlistId += playlist[i].id + ","
-      }
-
-      console.log("reduced?" + playlistId);
-      requestSongInfo();
-
-      
-      // outputHtml(formattedResult);
-      
-      // matchList.innerHTML = `<div></div>`;
-      return response.data;
-    } 
-    catch(error) {
-      console.log(error);
-    }
-  };
-
-  const requestSongInfo = async query => {
-    // for now only search by track name
-    const url = `https://api.spotify.com/v1/tracks?ids=${playlistId}`;
-    try {
-      const response = await axios.get(url);
-      console.log(response.data);
-      console.log("called get playlist")
-      playlist = response.data;
-      
-      // outputHtml(formattedResult);
-      
-      // matchList.innerHTML = `<div></div>`;
-      return response.data;
-    } 
-    catch(error) {
-      console.log(error);
-    }
-  };
-
-  // useInterval(() => {
-  //   requestPlaylist()
-  // }, 3000);
-
-
-
-  setInterval(requestPlaylist, 5000);
-
-
-  const request = async query => {
-    // for now only search by track name
-    const url = `https://api.spotify.com/v1/search?q=${query}&type=track&market=CA&limit=10`;
-    try {
-      const response = await axios.get(url, config, params);
-      console.log(response);
-      const formattedResult = formatResult(response);
-      console.log(formattedResult);
-      results = formattedResult;
-
-      setMatches(formattedResult.map((song) => 
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <Song info={song}></Song>
-        </li>
-      ));
-      // outputHtml(formattedResult);
-      
-      // matchList.innerHTML = `<div></div>`;
-      return formattedResult;
-    } 
-    catch(error) {
-      console.log(error);
-    }
-  };
-  var searchResults = request('IFLY');
-
-  const handleChange = event => {
-    setSearchTerm(event.target.value);
-    searchResults = request(searchTerm);
-  };
+  const { roomId, authToken } = props;
 
   const config = {
     headers: {
-      Authorization: "Bearer " + access_token,
+    Authorization: "Bearer " + authToken,
     }
   }
   const params = {}
+
+  // HOOKS
+  const [searchTerm, setSearchTerm] = useState("");
+  const [matches, setMatches] = useState();
+  const [playlist, setPlaylist] = useState([]);
+
+  // -------------------------------
+  // REFRESH PLAYLIST 
+  // -------------------------------
+
+  const requestPlaylist = async () => {
+    const url = `http://localhost:3000/api/getPlaylist/${roomId}`;
+    try {
+      const response = await axios.get(url);
+      console.log("called get playlist");
+      console.log(response.data);
+      setPlaylist(response.data);
+      return;// response.data;
+    } 
+    catch(error) {
+      console.log(error);
+    }
+  };
+
+  // NOTE: for some reason requestPlaylist will trigger itself to run in a loop
+  // if you uncomment the refresh function here it will cause refresh to run every 1s or something
+  // may break your computer?? but will appear as updating in real time
+  // otherwise i set it up so you can refresh ONLY upon clicking a button
+  useEffect(()=> {
+    refresh();
+  })
+
+  const refresh = () => {
+    requestPlaylist();
+  }
+
+  // format data from fetch
+  const rows = playlist.map((song) => 
+    <li class="list-group-item d-flex justify-content-between align-items-center" key={song.id}>
+      <Song authToken={authToken} type='playlist' roomId={roomId} upvotes={song.votes} id={song.id} />
+    </li>
+  );
+  
+  // -------------------------------
+  // SEARCH REQUEST 
+  // -------------------------------
 
   const formatResult = searchResult => {
     const trackitems = searchResult.data.tracks.items;
@@ -141,60 +66,72 @@ const Playlist = props => {
         artists: track.artists,
         name: track.name,
         id: track.id,
-        link: track.href,
+        track_link: track.external_urls.spotify,
+        artist_link: track.artists[0].external_urls.spotify,
         image: track.album.images,
       };
     });
     return parsedResult;
   }
 
-  console.log(searchResults);
+  const request = async query => {
+    // for now only search by track name
+    const url = `https://api.spotify.com/v1/search?q=${query}&type=track&market=CA&limit=10`;
+    try {
+      if (query === "") {
+        setMatches([]); 
+        return;
+      }
+      const response = await axios.get(url, config, params);
+      console.log(response);
+      const formattedResult = formatResult(response);
+      console.log(formattedResult);
 
-  // get data somehow
-  console.log(`playlist roomId: ${roomId}`);
+      setMatches(formattedResult.map((song) => 
+        <li class="list-group-item d-flex justify-content-between align-items-center" key={song.id}>
+          <Song authToken={authToken} info={song} upvotes={0} roomId={roomId}></Song>
+        </li>
+      ));
 
-  // fake data for now
-  const data = [
-    {
-      title: "song1",
-      artist: "artist1",
-      image: logo,
-      id: 1,
-    },
-    {
-      title: "song2",
-      artist: "artist2",
-      image: logo,
-      id: 2,
-    },
-  ]
+      return formattedResult;
+    } 
+    catch(error) {
+      console.log(error);
+    }
+  };
 
-  // format data
-  const rows = data.map((song) => 
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-    <Song type='vote' roomId={roomId} upvotes={0} artist="John" title="Lost in the Woods" id={song.id} />
-    </li>
-  );
+  // test request
+  //var searchResults = request('IFLY');
+  //console.log(searchResults);
+
+  const handleChange = event => {
+    setSearchTerm(event.target.value);
+    request(searchTerm);
+  };
+
+  // -------------------------------
+  // RENDER
+  // -------------------------------
 
   return (
     <div>
       <div className="playlist-container">
         <ul class="mt-4 list-group">
           {rows}
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            {/* <input id="search" type="text" class="form-control form-control-lg"
-              placeholder="name">    
-            </input> */}
+          <li class="list-group-item d-flex justify-content-between align-items-center mt-5">
             <input
-            id="search" type="text" class="form-control form-control-lg"
-            placeholder="Search"
-            value={searchTerm}
-            onChange={handleChange}/>
+              id="search" type="text" class="form-control form-control-lg"
+              placeholder="Search"
+              value={searchTerm}
+              onChange={handleChange}/>
           </li>
           <div id="match-list">
             {matches}
           </div>
         </ul>
+        <button className="standard-button" onClick={refresh}>
+          Refresh
+        </button>
       </div>
     </div>
   );

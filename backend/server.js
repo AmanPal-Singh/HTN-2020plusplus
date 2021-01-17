@@ -7,24 +7,6 @@ app.use(cors())
 const axios = require('axios').default;
 
 let activeRooms = [
-    {
-        roomID: 123,
-        authToken: "BQCVMk463eoBr8tMWWCqyIAKQKP83VYVzOwRZpRAU7oS0mw_h18Mebx0uwd6PSIrJzBfq0IBcUIMzE74iqO98T67O9UQkeNiRljablIv2vuK2_C9FHAfpotTBnE_8OUKqOradhA_w72X8Wn1dAXiN0E8Qt15IlUjyFySHKDabLoGNaOHoJuWbNQxycOnlhfVPY6Mcbtty4UdUKZn6biFJJYc",
-        queue: [
-            {
-                id: "3ee8Jmje8o58CHK66QrVC2",
-                votes: 4
-            },
-            {
-                id: "31I3Rt1bPa2LrE74DdNizO",
-                votes: 3
-            },
-            {
-                id: "46OFHBw45fNi7QNjSetITR",
-                votes: 2
-            },
-        ]
-    }
 ]
 
 // Proprietary stable sorting algorithm

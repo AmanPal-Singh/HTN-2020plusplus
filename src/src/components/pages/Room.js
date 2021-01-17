@@ -20,20 +20,24 @@ const Room = props => {
         console.log(authToken)
     });
 
+    authToken="BQD8wfUWmx-ZAyr9mRy7yUxhy4f2DPi9YBf2_EV5Zw3YyF-V9EwfyDaVw3Pji5y4fa830cyP_jw1ZDgrEdUaImC0MrzekTwM1gbZVTFcUwYlxrlbRi95hmQrfVghJVnxSYkVlQVuHGCpS66s7zzzesSUSnEVEFfKEr9RsAt_QNLnOdZyKCghtAiQ34ugCYxtcPOX7RZSuYxK2lnuJu0XaC-8niTcP74NX0GGDppSFF0";
 
   return (
     <div class="container mt-5 col-md-8">
-      <div class="grid">
-        <div class="item-one">
-          <h1 id="green" >{`room ${roomId}`}</h1>
-          <p id="green">scan the code to share!</p>
-          <p id="green">upvote and add songs</p>
-        </div>
-        <div class="item-two">
-          <QRCode value={`${url}`} />
+      <div className="banner">
+        <div class="grid">
+          <div class="item-one">
+            <h1 id="green" >{`room ${roomId}`}</h1>
+            <p id="green">scan the code to share!</p>
+            <h3 id="green">Up next: </h3>
+          </div>
+          <div class="item-two">
+            <QRCode value={`${url}`} />
+          </div>
         </div>
       </div>
-      <Playlist roomId={roomId} />
+    
+      <Playlist roomId={roomId} authToken={authToken}/>
     </div>
   );
 }

@@ -7,7 +7,7 @@ class LoggedIn extends React.Component {
         window.location.replace('http://localhost:3000/loggedIn?' + 'token=' + accessToken);
     }
     render() {
-        return <h1>Hello</h1>;
+        return <h1>Redirecting to room...</h1>;
     }
 }
 

@@ -11,11 +11,30 @@ html, .App {
   /* grid-template: 150px / auto auto auto; */
 }
 
+.banner {
+  background-color:slategrey;
+  padding: 100px;
+}
+
+.link {
+  text-decoration: none;
+  color: #474642;
+}
+
+.link:hover {
+  text-decoration: none;
+  color: black;
+}
+
 .grid-song {
   width: 100%;
   display: grid;
   grid-template-columns: 20% 20% 20% 20% 20%;
   /* grid-template: 150px / auto auto auto; */
+}
+
+.grid-song:hover {
+  background-color: #fbf3d4;
 }
 
 .song-title {
@@ -39,8 +58,6 @@ html, .App {
   align-self: center;
 }
 
-
-
 .item-one {
   grid-column-start: 1;
   grid-column-end: 2;
@@ -53,9 +70,9 @@ html, .App {
   /* background-color: red */
 }
 
-/* #green  {
+#green  {
   color: #f1f1f1;
-} */
+} 
 
 .App-link {
   color: #61dafb;
@@ -84,17 +101,23 @@ html, .App {
 .button, .standard-button {
   font-size: 30px;
   text-decoration: none;
+  border: none;
   /* border: solid 2px #000000; */
   background-color: #EEEEEE;
-  color: #000000;
+  color: #474642;
   padding: 6px 30px 6px 30px;
   margin: 30px;
 }
 
+button {
+  border: none;
+}
+
 .button:hover, button:hover {
   text-decoration: none;
-  background-color: #e8f3fd;
-  color: #EEEEEE;
+  border: none;
+  background-color:slategrey;
+  color: white;
 }
 
 .song-icon {
