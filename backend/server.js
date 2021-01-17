@@ -34,7 +34,8 @@ let activeRooms = [
 ]
 
 const client_id = '3b83df1eb5414ccfa16275dc089add12';
-const redirect_uri = 'http://localhost:3000/callback.html'
+// const redirect_uri = 'insert prod url here'
+const redirect_uri = 'http://localhost:3000/loggedIn'
 
 const stateKey = "spotify_auth_state";
 const refreshKey = "refresh_key";
@@ -57,6 +58,7 @@ var generateRandomString = function(length) {
     }
     return text;
   };
+
 // Array of rooms to temporarily ignore adding new songs to
 var inactiveRoomQueues = []
 
@@ -180,6 +182,16 @@ app.get("/", function (req, res) {
     res.sendFile(path.join(public, "index.html"));
 });
 
+app.get("/loggedin", function (req, res) {
+    //parsing
+    //generate room + redirect to their acc room
+
+    // let re = /access_token=(.*)&token/g;
+    // let accessToken = (re.exec());
+    console.log(req)
+    res.send("HI")
+});
+
 
 // Get room's playlist returns data in form of:
 // [
@@ -217,7 +229,7 @@ app.use(express.static("public"));
 
 // Listen on port 3000
 var port = 3000;
-http.listen(port, () => console.log(`Server listening on port: ${port}`));
+http.listen(port, () => console.log(`Server listening http://localhost:${port}`));
 
 
 
